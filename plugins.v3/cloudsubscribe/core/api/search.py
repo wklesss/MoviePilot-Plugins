@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 from app.sdk.media import MetaInfo
 from app.sdk.logging import logger
 from app.schemas import MediaInfo
-from app.schemas.types import MediaType
+from app.schemas.types import MediaSource, MediaType
 from app.sdk.utilities import StringUtils
 
 from .. import OwnerDelegator, SearchCapability
@@ -857,7 +857,7 @@ class SearchApi(OwnerDelegator):
             meta = MetaInfo(title)
             candidates = self.chain.search_medias(
                 meta=meta,
-                source="themoviedb",
+                media_source=MediaSource.TMDB,
             ) or []
         except Exception as error:
             logger.warning(f"[{title}][TMDB] 媒体候选查询失败：{error}")

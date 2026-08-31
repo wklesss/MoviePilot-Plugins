@@ -21,7 +21,7 @@ from app.application.directory import DirectoryHelper
 from app.sdk.logging import logger
 from app.modules.filemanager import FileManagerModule
 from app.modules.filemanager.transhandler import TransHandler
-from app.schemas.types import MediaType, MessageType
+from app.schemas.types import MediaSource, MediaType, MessageType
 from app.sdk.network import RequestUtils
 
 from .baseline import UpgradeBaselineService
@@ -1011,7 +1011,7 @@ class SyncHandler:
                         "subscribe_tmdb_repair",
                         self._chain.search_medias,
                         meta=search_meta,
-                        source="themoviedb",
+                        media_source=MediaSource.TMDB,
                     ) or []
                     for row in rows:
                         row_id = self._tmdb_id_from_media(row)
