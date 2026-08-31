@@ -2732,6 +2732,13 @@ class SyncHandler:
         media_category = getattr(subscribe, "media_category", None)
         if media_category:
             effective_media.category = media_category
+        # 订阅卡片恢复的 type 可能为字符串，宿主 TransHandler 内部会取 .value 报错
+        media_type = getattr(effective_media, "type", None)
+        if isinstance(media_type, str):
+            try:
+                effective_media.type = MediaType(media_type)
+            except ValueError:
+                pass
         return effective_media
 
     def _resolve_resource_season_dir(

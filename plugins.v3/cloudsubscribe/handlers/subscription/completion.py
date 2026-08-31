@@ -204,6 +204,18 @@ class SubscribeHandler:
                     return None
 
                 try:
+                    # 兼容旧版 V3 宿主：MediaInfo 缺少 get_message_image 时补齐，
+                    # 否则宿主 __finish_subscribe 渲染完成通知会抛 AttributeError
+                    if not hasattr(mediainfo, "get_message_image"):
+                        try:
+                            _message_image = (
+                                getattr(mediainfo, "poster_path", None)
+                                or getattr(mediainfo, "backdrop_path", None)
+                                or ""
+                            )
+                            type(mediainfo).get_message_image = lambda self: _message_image
+                        except Exception:
+                            pass
                     SubscribeCompletionChain().finish_subscribe_or_not(
                         subscribe=subscribe,
                         meta=meta,
