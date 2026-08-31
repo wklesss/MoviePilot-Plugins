@@ -7,7 +7,7 @@
     "icon": "https://raw.githubusercontent.com/odomu/MoviePilot-Plugins/main/icons/cloud.png",
     "author": "wklesss",
     "level": 1,
-    "release": true,
+    "release": false,
     "system_version": ">=3.0.0",
     "history": {
       "v3.0.1": "修复 V3 兼容：search_medias 的 source 参数改为 media_source=MediaSource.TMDB，修复订阅 TMDB ID 自动修复报错",
