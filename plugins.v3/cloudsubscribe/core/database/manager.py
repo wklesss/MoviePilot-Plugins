@@ -101,6 +101,13 @@ class CloudSubscribeDatabaseManager:
         if self._engine is None:
             raise RuntimeError("CloudSubscribe 数据库引擎未初始化")
         script_location = Path(__file__).with_name("alembic")
+        versions_dir = script_location / "versions"
+        revisions = sorted(
+            versions_dir.glob("*.py")
+        ) if versions_dir.is_dir() else []
+        if not revisions:
+            logger.info("CloudSubscribe 无数据库迁移脚本，跳过 Alembic 升级")
+            return
         config = AlembicConfig()
         config.file_config = ConfigParser(interpolation=None)
         config.set_main_option("script_location", str(script_location))
