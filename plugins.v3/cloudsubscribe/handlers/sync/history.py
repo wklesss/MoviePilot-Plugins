@@ -15,6 +15,7 @@ from app.sdk.media import MetaInfo
 from app.db.oper.downloadhistory import DownloadHistoryOper
 from app.db.models.downloadhistory import DownloadHistory
 from app.db.models.mediaserver import MediaServerItem
+from app.db.oper.mediaserver import MediaServerOper
 from app.db.oper.subscribe import SubscribeOper
 from app.sdk.services import MediaServerHelper
 from app.sdk.logging import logger

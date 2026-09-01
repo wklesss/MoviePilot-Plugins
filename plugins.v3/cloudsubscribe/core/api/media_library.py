@@ -5,6 +5,7 @@ from typing import Any, Dict, Optional
 
 from app.chain.mediaserver import MediaServerChain
 from app.db.models.mediaserver import MediaServerItem
+from app.db.oper.mediaserver import MediaServerOper
 from app.sdk.services import MediaServerHelper
 from app.sdk.logging import logger
 
