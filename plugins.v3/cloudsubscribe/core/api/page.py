@@ -73,6 +73,11 @@ class PageApi(OwnerDelegator):
         else:
             page_history = [copy.deepcopy(item) for item in page_history]
             history_groups = [copy.deepcopy(group) for group in page_groups]
+        try:
+            emby_play_items = self._history_emby_play_items(page_history)
+        except Exception as error:
+            logger.debug(f"Emby 播放项查询失败，忽略并降级：{error}")
+            emby_play_items = {}
         return {
             "success": True,
             "data": {
@@ -87,7 +92,7 @@ class PageApi(OwnerDelegator):
                         getattr(self, "_enable_cloud_upgrade", False)
                     ),
                 },
-                "emby_play_items": self._history_emby_play_items(page_history),
+                "emby_play_items": emby_play_items,
             },
         }
 
