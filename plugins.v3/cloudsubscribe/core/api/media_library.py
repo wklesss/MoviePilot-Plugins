@@ -189,13 +189,16 @@ class MediaLibraryApi(OwnerDelegator):
         }
         if not active_services:
             return {}
-        eligible = {
-            (int(item.get("tmdb_id")), str(item.get("type") or ""))
-            for item in history
-            if item.get("tmdb_id")
-               and str(item.get("status") or "") == "成功"
-               and not item.get("finalize_key")
-        }
+        eligible = set()
+        for item in history:
+            raw_tmdb = str(item.get("tmdb_id") or "").strip()
+            if not raw_tmdb.isdigit():
+                continue
+            if str(item.get("status") or "") != "成功":
+                continue
+            if item.get("finalize_key"):
+                continue
+            eligible.add((int(raw_tmdb), str(item.get("type") or "")))
         if not eligible:
             return {}
         tmdb_ids = {tmdb_id for tmdb_id, _ in eligible}

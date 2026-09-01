@@ -2,11 +2,12 @@
   "name": "网盘订阅助手-v3版",
   "description": "适配 MoviePilot V3 的临时版本：整合网盘能力与多渠道资源搜索，自动查找并补充订阅缺失的影视内容",
   "labels": "订阅,网盘,转存,搜索,通知,刮削,签到,ed2k,magnet",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "icon": "https://raw.githubusercontent.com/odomu/MoviePilot-Plugins/main/icons/cloud.png",
   "author": "wklesss",
   "system_version": ">=3.0.0",
   "history": {
+    "v3.0.5": "历史记录页接口健壮性加固：Emby 播放项 tmdb_id 非数字与洗版评分字段非整数时不再抛异常导致接口 500",
     "v3.0.4": "修复媒体库查询 API 报错：补全宿主 MediaServerOper 导入，避免 NameError 导致接口 500",
     "v3.0.3": "修复历史记录页未知错误：私有库无 Alembic 迁移脚本时跳过数据库结构升级，避免 upgrade head 抛异常导致所有数据接口 500",
     "v3.0.2": "修复完成订阅与路径解析兼容：补齐旧版V3宿主MediaInfo缺失的get_message_image方法；订阅type为字符串时归一化为枚举，避免宿主get_dest_dir取.value报错",

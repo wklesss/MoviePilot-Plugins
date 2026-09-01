@@ -1022,9 +1022,20 @@ class HistoryService(OwnerDelegator):
                         if current_size != "-" else previous_size
                     )
                 if record.get("previous_rule_score") is not None:
+                    try:
+                        previous_score = int(
+                            float(record.get("previous_rule_score") or 0)
+                        )
+                    except (TypeError, ValueError):
+                        previous_score = 0
+                    try:
+                        current_score = int(
+                            float(record.get("rule_score") or 0)
+                        )
+                    except (TypeError, ValueError):
+                        current_score = 0
                     parts.append(
-                        f"评分 {int(record.get('previous_rule_score') or 0)}"
-                        f" → {int(record.get('rule_score') or 0)}"
+                        f"评分 {previous_score} → {current_score}"
                     )
                 count = max(1, int(record.get("upgrade_count") or 1))
                 count_label = f"（已洗版 {count} 次）" if count > 1 else ""
