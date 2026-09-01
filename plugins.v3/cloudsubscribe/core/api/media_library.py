@@ -5,7 +5,6 @@ from typing import Any, Dict, Optional
 
 from app.chain.mediaserver import MediaServerChain
 from app.db.models.mediaserver import MediaServerItem
-from app.db.oper.mediaserver import MediaServerOper
 from app.sdk.services import MediaServerHelper
 from app.sdk.logging import logger
 
@@ -202,7 +201,7 @@ class MediaLibraryApi(OwnerDelegator):
         if not eligible:
             return {}
         tmdb_ids = {tmdb_id for tmdb_id, _ in eligible}
-        rows = MediaServerOper()._execute_sync_query(
+        rows = media_server_sync_query(
             lambda session: session.query(MediaServerItem).filter(
                 MediaServerItem.server == "emby",
                 *media_server_tmdb_filters(MediaServerItem, tmdb_ids),

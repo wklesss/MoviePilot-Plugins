@@ -29,7 +29,9 @@ from ...core.media import (
     get_download_history_last_by,
     list_subscribes_by_tmdb_id,
     media_identity,
+    media_server_sync_query,
     media_server_tmdb_filters,
+    oper_sync_query,
     recognize_media,
     tmdb_id_of,
 )
@@ -482,7 +484,7 @@ class HistoryService(OwnerDelegator):
                 columns = set(TransferHistory.__table__.columns.keys())
                 desired_sources = {entry["src"] for entry in entries}
                 if reconcile:
-                    managed = oper._execute_sync_query(
+                    managed = oper_sync_query(oper,
                         lambda session: session.query(TransferHistory).filter(or_(
                             TransferHistory.src.like("cloudsubscribe://%"),
                             TransferHistory.downloader == "网盘订阅助手",
@@ -496,7 +498,7 @@ class HistoryService(OwnerDelegator):
                             removed += 1
                 else:
                     existing = (
-                        oper._execute_sync_query(
+                        oper_sync_query(oper,
                             lambda session: session.query(TransferHistory).filter(
                                 TransferHistory.src.in_(sorted(desired_sources))
                             ).all()
@@ -589,7 +591,7 @@ class HistoryService(OwnerDelegator):
                 return 0
             try:
                 oper = TransferHistoryOper()
-                managed = oper._execute_sync_query(
+                managed = oper_sync_query(oper,
                     lambda session: session.query(TransferHistory).filter(or_(
                         TransferHistory.src.like("cloudsubscribe://%"),
                         TransferHistory.downloader == "网盘订阅助手",
@@ -1748,7 +1750,7 @@ class HistoryService(OwnerDelegator):
                 MediaServerItem.title, MediaServerItem.year
             ).limit(100).all()
 
-        rows = media_server_oper._execute_sync_query(_query_rows)
+        rows = media_server_sync_query(_query_rows)
         for row in rows:
             media_type = self._media_server_item_type(row.item_type)
             row_tmdb_id = tmdb_id_of(row)
@@ -1864,7 +1866,7 @@ class HistoryService(OwnerDelegator):
 
         rows_by_key = {}
         for storage_server, item_ids in rows_by_server.items():
-            rows = media_server_oper._execute_sync_query(
+            rows = media_server_sync_query(
                 lambda session: session.query(MediaServerItem).filter(
                     func.lower(MediaServerItem.server) == storage_server,
                     MediaServerItem.item_id.in_(item_ids),

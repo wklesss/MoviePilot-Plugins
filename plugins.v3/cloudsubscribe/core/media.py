@@ -345,3 +345,31 @@ def media_server_tmdb_filters(model: Any, tmdb_ids: Iterable[int]) -> List[Any]:
             model.media_id.in_({str(item) for item in normalized}),
         ]
     return [model.tmdbid.in_(normalized)]
+
+
+def oper_sync_query(oper, query_fn):
+    """兼容宿主 Oper 是否存在 ``_execute_sync_query`` 方法。
+
+    新版宿主提供 ``Oper._execute_sync_query``，旧版宿主缺失该方法；
+    回退到宿主 SessionFactory 直接查询，避免 API 500。
+    """
+    execute = getattr(oper, "_execute_sync_query", None)
+    if callable(execute):
+        return execute(query_fn)
+    try:
+        from app.db import SessionFactory
+    except ImportError:
+        from app.db.session import SessionFactory
+    with SessionFactory() as session:
+        return query_fn(session)
+
+
+def media_server_sync_query(query_fn):
+    """兼容宿主 MediaServerOper 是否存在 _execute_sync_query 方法。
+
+    新版宿主提供 ``MediaServerOper._execute_sync_query``，旧版宿主缺失该方法；
+    回退到宿主 SessionFactory 直接查询，避免 API 500。
+    """
+    from app.db.oper.mediaserver import MediaServerOper
+
+    return oper_sync_query(MediaServerOper(), query_fn)
